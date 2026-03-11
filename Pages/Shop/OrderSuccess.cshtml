@@ -1,0 +1,42 @@
+@page "{orderId:int}"
+@model OnlineShopWeb.Pages.Shop.OrderSuccessModel
+@{
+    ViewData["Title"] = "Order Placed!";
+}
+
+<div class="text-center py-5">
+    <p style="font-size:4rem;">✅</p>
+    <h2 class="text-success">Order Placed Successfully!</h2>
+    <p class="text-muted">Thank you for your order. We'll contact you to confirm delivery.</p>
+
+    @if (Model.Order != null)
+    {
+        <div class="card mx-auto mt-4 shadow-sm" style="max-width:500px;">
+            <div class="card-body text-start">
+                <h6 class="card-title">Order #@Model.Order.OrderId</h6>
+                <p class="text-muted small">@Model.Order.OrderDate?.ToString("dd/MM/yyyy HH:mm")</p>
+                <hr />
+                @foreach (var item in Model.Order.OrderItems)
+                {
+                    <div class="d-flex justify-content-between">
+                        <span>@item.Product?.ProductName × @item.Quantity</span>
+                        <span>@((item.Price * item.Quantity)?.ToString("N0")) ₫</span>
+                    </div>
+                }
+                <hr />
+                <div class="d-flex justify-content-between fw-bold">
+                    <span>Total</span>
+                    <span class="text-primary">@Model.Order.TotalAmount?.ToString("N0") ₫</span>
+                </div>
+                <div class="alert alert-info mt-3 mb-0">
+                    💵 Payment: <strong>Cash on Delivery (COD)</strong>
+                </div>
+            </div>
+        </div>
+    }
+
+    <div class="mt-4">
+        <a asp-page="/Shop/Products" class="btn btn-primary me-2">Continue Shopping</a>
+        <a asp-page="/Index" class="btn btn-outline-secondary">Back to Home</a>
+    </div>
+</div>

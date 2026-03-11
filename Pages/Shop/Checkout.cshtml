@@ -1,0 +1,62 @@
+@page
+@model OnlineShopWeb.Pages.Shop.CheckoutModel
+@{
+    ViewData["Title"] = "Checkout";
+}
+
+<h3 class="mb-4">📋 Checkout</h3>
+
+<div class="row g-4">
+    <!-- Delivery Info -->
+    <div class="col-md-7">
+        <div class="card shadow-sm">
+            <div class="card-body">
+                <h5 class="card-title mb-3">🚚 Delivery Information</h5>
+                <form method="post">
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">Full Name</label>
+                        <input asp-for="FullName" class="form-control" required />
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">Phone</label>
+                        <input asp-for="Phone" class="form-control" required />
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">Delivery Address</label>
+                        <textarea asp-for="Address" class="form-control" rows="2" required></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">Note (optional)</label>
+                        <textarea asp-for="Note" class="form-control" rows="2" placeholder="Special instructions..."></textarea>
+                    </div>
+                    <div class="alert alert-info">
+                        💵 <strong>Payment method: Cash on Delivery (COD)</strong><br />
+                        Pay when you receive your order.
+                    </div>
+                    <button type="submit" class="btn btn-success btn-lg w-100">✅ Place Order</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Order Summary -->
+    <div class="col-md-5">
+        <div class="card shadow-sm">
+            <div class="card-body">
+                <h5 class="card-title mb-3">🧾 Order Summary</h5>
+                @foreach (var item in Model.CartItems)
+                {
+                    <div class="d-flex justify-content-between mb-2">
+                        <span>@item.Product.ProductName × @item.Quantity</span>
+                        <span>@item.Subtotal.ToString("N0") ₫</span>
+                    </div>
+                }
+                <hr />
+                <div class="d-flex justify-content-between fw-bold fs-5">
+                    <span>Total</span>
+                    <span class="text-primary">@Model.Total.ToString("N0") ₫</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

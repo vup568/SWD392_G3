@@ -1,0 +1,82 @@
+@page
+@model OnlineShopWeb.Pages.Shop.CartModel
+@{
+    ViewData["Title"] = "Shopping Cart";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h3>🛒 Shopping Cart</h3>
+    <a asp-page="/Shop/Products" class="btn btn-outline-secondary">← Continue Shopping</a>
+</div>
+
+@if (!Model.CartItems.Any())
+{
+    <div class="text-center py-5">
+        <p class="fs-1">🛒</p>
+        <h5>Your cart is empty</h5>
+        <a asp-page="/Shop/Products" class="btn btn-primary mt-2">Browse Products</a>
+    </div>
+}
+else
+{
+    <div class="table-responsive">
+        <table class="table align-middle">
+            <thead class="table-light">
+                <tr>
+                    <th>Product</th>
+                    <th>Price</th>
+                    <th>Quantity</th>
+                    <th>Subtotal</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.CartItems)
+                {
+                    <tr>
+                        <td>
+                            <div class="d-flex align-items-center gap-3">
+                                @if (!string.IsNullOrEmpty(item.Product.ImageUrl))
+                                {
+                                    <img src="@item.Product.ImageUrl" style="width:60px;height:60px;object-fit:cover;" class="rounded" />
+                                }
+                                <span>@item.Product.ProductName</span>
+                            </div>
+                        </td>
+                        <td>@item.Product.Price.ToString("N0") ₫</td>
+                        <td>
+                            <form method="post" asp-page-handler="Update" class="d-flex align-items-center gap-1">
+                                <input type="hidden" name="productId" value="@item.Product.ProductId" />
+                                <input type="number" name="quantity" value="@item.Quantity" min="1" class="form-control form-control-sm" style="width:70px;" />
+                                <button type="submit" class="btn btn-sm btn-outline-secondary">Update</button>
+                            </form>
+                        </td>
+                        <td class="fw-bold">@item.Subtotal.ToString("N0") ₫</td>
+                        <td>
+                            <form method="post" asp-page-handler="Remove">
+                                <input type="hidden" name="productId" value="@item.Product.ProductId" />
+                                <button type="submit" class="btn btn-sm btn-outline-danger">Remove</button>
+                            </form>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+            <tfoot>
+                <tr>
+                    <td colspan="3" class="text-end fw-bold fs-5">Total:</td>
+                    <td colspan="2" class="fw-bold fs-5 text-primary">@Model.Total.ToString("N0") ₫</td>
+                </tr>
+            </tfoot>
+        </table>
+    </div>
+    <div class="text-end mt-3">
+        @if (HttpContext.Session.GetString("UserId") != null)
+        {
+            <a asp-page="/Shop/Checkout" class="btn btn-success btn-lg">Proceed to Checkout →</a>
+        }
+        else
+        {
+            <a asp-page="/Account/Login" class="btn btn-primary btn-lg">Login to Checkout →</a>
+        }
+    </div>
+}

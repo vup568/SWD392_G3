@@ -1,0 +1,44 @@
+@page "{id:int}"
+@model OnlineShopWeb.Pages.Shop.ProductDetailModel
+@{
+    ViewData["Title"] = Model.Product?.ProductName;
+}
+
+@if (Model.Product != null)
+{
+    <nav aria-label="breadcrumb" class="mb-3">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a asp-page="/Index">Home</a></li>
+            <li class="breadcrumb-item"><a asp-page="/Shop/Products">Products</a></li>
+            <li class="breadcrumb-item active">@Model.Product.ProductName</li>
+        </ol>
+    </nav>
+
+    <div class="row">
+        <div class="col-md-5">
+            @if (!string.IsNullOrEmpty(Model.Product.ImageUrl))
+            {
+                <img src="@Model.Product.ImageUrl" class="img-fluid rounded shadow" alt="@Model.Product.ProductName" />
+            }
+            else
+            {
+                <div class="bg-light d-flex align-items-center justify-content-center rounded" style="height:300px;">
+                    <span class="text-muted" style="font-size:5rem;">📦</span>
+                </div>
+            }
+        </div>
+        <div class="col-md-7">
+            <h2>@Model.Product.ProductName</h2>
+            <p class="text-muted">Category: @Model.Product.Category?.CategoryName</p>
+            <h3 class="text-primary fw-bold">@Model.Product.Price.ToString("N0") ₫</h3>
+            <p class="text-muted">In stock: @Model.Product.Quantity</p>
+            <hr />
+            <p>@Model.Product.Description</p>
+            <form method="post" asp-page-handler="AddToCart">
+                <input type="hidden" name="productId" value="@Model.Product.ProductId" />
+                <button type="submit" class="btn btn-primary btn-lg mt-2">🛒 Add to Cart</button>
+                <a asp-page="/Shop/Products" class="btn btn-outline-secondary btn-lg mt-2">← Back</a>
+            </form>
+        </div>
+    </div>
+}

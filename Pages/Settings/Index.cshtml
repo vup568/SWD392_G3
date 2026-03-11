@@ -1,0 +1,56 @@
+@page
+@model OnlineShopWeb.Pages_Settings.IndexModel
+
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Index</title>
+</head>
+<body>
+<p>
+    <a asp-page="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Setting[0].SettingKey)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Setting[0].SettingValue)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Setting[0].Status)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model.Setting) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.SettingKey)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.SettingValue)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Status)
+            </td>
+            <td>
+                <a asp-page="./Edit" asp-route-id="@item.SettingId">Edit</a> |
+                <a asp-page="./Details" asp-route-id="@item.SettingId">Details</a> |
+                <a asp-page="./Delete" asp-route-id="@item.SettingId">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
+</body>
+</html>
