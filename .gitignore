@@ -1,0 +1,30 @@
+# Build results
+bin/
+obj/
+
+# Visual Studio
+.vs/
+*.user
+*.suo
+
+# Rider / JetBrains
+.idea/
+
+# Logs
+*.log
+
+# ASP.NET Scaffolding
+ScaffoldingReadMe.txt
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Publish
+publish/
+
+# node modules (nếu có)
+node_modules/
+
+# Secrets
+appsettings.Development.json
