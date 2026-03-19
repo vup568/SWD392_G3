@@ -1,0 +1,16 @@
+@model IList<SWD392_MVC.Models.Post>
+@{ ViewData["Title"] = "Blog"; }
+<h4 class="mb-3"><i class="bi bi-newspaper"></i> Blog</h4>
+<form method="get" class="row g-2 mb-4">
+  <div class="col-md-5"><input name="search" class="form-control" placeholder="Search posts..."/></div>
+  <div class="col-md-2"><button type="submit" class="btn btn-primary w-100">Search</button></div>
+</form>
+<div class="row row-cols-1 row-cols-md-3 g-3">
+  @foreach (var p in Model) {
+    <div class="col"><div class="card h-100"><div class="card-body">
+      <h5 class="card-title">@p.Title</h5>
+      <p class="text-muted small"><i class="bi bi-person"></i> @p.Author?.FullName — @p.CreatedAt?.ToString("dd/MM/yyyy")</p>
+      <a href="/Blog/Detail/@p.PostId" class="btn btn-outline-primary btn-sm">Read More</a>
+    </div></div></div>
+  }
+</div>

@@ -1,0 +1,14 @@
+@model SWD392_MVC.Services.MarketingDashboardData
+@{ ViewData["Title"] = "Marketing Dashboard"; }
+<h4 class="mb-4"><i class="bi bi-graph-up"></i> Marketing Dashboard</h4>
+<div class="row g-3 mb-4">
+  <div class="col-md-3"><div class="card stat-card border-primary p-3"><p class="text-muted mb-1">Customers</p><h3>@Model.TotalCustomers</h3></div></div>
+  <div class="col-md-3"><div class="card stat-card border-success p-3"><p class="text-muted mb-1">Active Posts</p><h3>@Model.TotalPosts</h3></div></div>
+  <div class="col-md-3"><div class="card stat-card border-warning p-3"><p class="text-muted mb-1">Feedbacks</p><h3>@Model.TotalFeedbacks</h3></div></div>
+  <div class="col-md-3"><div class="card stat-card border-info p-3"><p class="text-muted mb-1">Active Sliders</p><h3>@Model.ActiveSliders</h3></div></div>
+</div>
+<div class="card p-3"><h6>Products by Category</h6><hr/>
+  @foreach (var (cat, count) in Model.ProductsByCategory) {
+    <div class="d-flex justify-content-between mb-1"><span>@cat</span><span class="badge bg-primary">@count</span></div>
+  }
+</div>

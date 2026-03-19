@@ -1,0 +1,15 @@
+@model SWD392_MVC.Services.SalesDashboardData
+@{ ViewData["Title"] = "Sales Dashboard"; }
+<h4 class="mb-4"><i class="bi bi-graph-up-arrow"></i> Sales Dashboard</h4>
+<div class="row g-3 mb-4">
+  <div class="col-md-3"><div class="card stat-card border-primary p-3"><p class="text-muted mb-1">Total Orders</p><h3>@Model.TotalOrders</h3></div></div>
+  <div class="col-md-3"><div class="card stat-card border-warning p-3"><p class="text-muted mb-1">Pending</p><h3>@Model.PendingOrders</h3></div></div>
+  <div class="col-md-3"><div class="card stat-card border-success p-3"><p class="text-muted mb-1">Completed</p><h3>@Model.CompletedOrders</h3></div></div>
+  <div class="col-md-3"><div class="card stat-card border-info p-3"><p class="text-muted mb-1">Revenue</p><h3>@Model.TotalRevenue.ToString("N0")</h3></div></div>
+</div>
+<div class="card p-3 mb-3"><h6>Top Selling Products</h6><hr/>
+  @foreach (var (name, qty) in Model.TopProducts) {
+    <div class="d-flex justify-content-between mb-1"><span>@name</span><span class="badge bg-success">@qty sold</span></div>
+  }
+</div>
+<a href="/Order/Manage" class="btn btn-primary"><i class="bi bi-clipboard-check"></i> Go to Orders</a>

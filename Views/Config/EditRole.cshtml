@@ -1,0 +1,11 @@
+@model SWD392_MVC.Models.Role
+@{ ViewData["Title"] = "Edit Role"; }
+<div class="row justify-content-center"><div class="col-md-5"><div class="card p-4">
+  <h4>Edit Role</h4><hr/>
+  <form method="post">
+    <input type="hidden" name="RoleId" value="@Model.RoleId"/>
+    <div class="mb-3"><label class="form-label">Role Name</label><input name="RoleName" value="@Model.RoleName" class="form-control" required /></div>
+    <button type="submit" class="btn btn-primary">Save</button>
+    <a href="/Config/Roles" class="btn btn-outline-secondary ms-2">Cancel</a>
+  </form>
+</div></div></div>
