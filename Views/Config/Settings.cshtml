@@ -1,0 +1,20 @@
+@model IList<SWD392_MVC.Models.Setting>
+@{ ViewData["Title"] = "System Settings"; }
+<div class="d-flex justify-content-between mb-3">
+  <h4><i class="bi bi-gear"></i> System Settings</h4>
+  <a href="/Config/CreateSetting" class="btn btn-success btn-sm"><i class="bi bi-plus"></i> Add Setting</a>
+</div>
+<table class="table table-hover">
+  <thead class="table-dark"><tr><th>Key</th><th>Value</th><th>Status</th><th>Actions</th></tr></thead>
+  <tbody>
+    @foreach (var s in Model) {
+      <tr><td>@s.SettingKey</td><td>@s.SettingValue</td>
+        <td><span class="badge @(s.Status==true?"bg-success":"bg-secondary")">@(s.Status==true?"Active":"Inactive")</span></td>
+        <td>
+          <a href="/Config/EditSetting/@s.SettingId" class="btn btn-sm btn-warning">Edit</a>
+          <a href="/Config/ToggleSetting/@s.SettingId" class="btn btn-sm @(s.Status==true?"btn-secondary":"btn-success")">Toggle</a>
+        </td>
+      </tr>
+    }
+  </tbody>
+</table>

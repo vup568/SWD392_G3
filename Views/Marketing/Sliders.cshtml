@@ -1,0 +1,22 @@
+@model IList<SWD392_MVC.Models.Slider>
+@{ ViewData["Title"] = "Manage Sliders"; }
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <h4><i class="bi bi-image"></i> Sliders</h4>
+  <a href="/Marketing/CreateSlider" class="btn btn-success"><i class="bi bi-plus"></i> Add Slider</a>
+</div>
+<table class="table table-hover">
+  <thead class="table-dark"><tr><th>Preview</th><th>Title</th><th>Link</th><th>Status</th><th>Actions</th></tr></thead>
+  <tbody>
+    @foreach (var s in Model) {
+      <tr>
+        <td>@if (!string.IsNullOrEmpty(s.ImageUrl)) { <img src="@s.ImageUrl" style="width:80px;height:50px;object-fit:cover;" class="rounded"/> }</td>
+        <td>@s.Title</td><td>@s.Link</td>
+        <td><span class="badge @(s.Status==true?"bg-success":"bg-secondary")">@(s.Status==true?"Active":"Hidden")</span></td>
+        <td>
+          <a href="/Marketing/EditSlider/@s.SliderId" class="btn btn-sm btn-warning">Edit</a>
+          <a href="/Marketing/ToggleSlider/@s.SliderId" class="btn btn-sm @(s.Status==true?"btn-secondary":"btn-success")">@(s.Status==true?"Hide":"Show")</a>
+        </td>
+      </tr>
+    }
+  </tbody>
+</table>

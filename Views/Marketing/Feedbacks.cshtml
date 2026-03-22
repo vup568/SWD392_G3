@@ -1,0 +1,55 @@
+@model IList<SWD392_MVC.Models.Feedback>
+@{ ViewData["Title"] = "Feedbacks / Reviews"; }
+
+<h4 class="mb-3"><i class="bi bi-chat-dots me-2"></i>Customer Reviews</h4>
+<p class="text-muted small">Reviews left by customers on completed orders. You can show or hide them.</p>
+
+<table class="table table-hover table-sm align-middle">
+  <thead class="table-dark">
+    <tr>
+      <th>Customer</th>
+      <th>Product</th>
+      <th>Order #</th>
+      <th>Rating</th>
+      <th>Review</th>
+      <th>Status</th>
+      <th>Date</th>
+      <th>Action</th>
+    </tr>
+  </thead>
+  <tbody>
+    @foreach (var f in Model) {
+      <tr>
+        <td>@f.User?.FullName</td>
+        <td>@f.Product?.ProductName</td>
+        <td>
+          @if (f.OrderId.HasValue) {
+            <span class="badge bg-light text-dark border">#@f.OrderId</span>
+          } else {
+            <span class="text-muted">—</span>
+          }
+        </td>
+        <td>
+          @for (int i = 0; i < (f.Rating ?? 0); i++) { <span class="text-warning">★</span> }
+          @for (int i = (f.Rating ?? 0); i < 5; i++) { <span class="text-muted">★</span> }
+        </td>
+        <td>@f.Content</td>
+        <td>
+          <span class="badge @(f.Status==true?"bg-success":"bg-secondary")">
+            @(f.Status == true ? "Visible" : "Hidden")
+          </span>
+        </td>
+        <td class="text-muted small">@f.CreatedAt?.ToString("dd/MM/yyyy")</td>
+        <td>
+          <a href="/Marketing/ToggleFeedback/@f.FeedbackId"
+             class="btn btn-sm @(f.Status==true?"btn-outline-secondary":"btn-outline-success")">
+            @(f.Status == true ? "Hide" : "Show")
+          </a>
+        </td>
+      </tr>
+    }
+    @if (!Model.Any()) {
+      <tr><td colspan="8" class="text-center text-muted py-4">No reviews yet.</td></tr>
+    }
+  </tbody>
+</table>

@@ -1,0 +1,22 @@
+@model SWD392_MVC.Models.Order
+@{ ViewData["Title"] = "Order Placed!"; }
+<div class="text-center py-5">
+  <p style="font-size:4rem">✅</p>
+  <h2 class="text-success">Order Placed Successfully!</h2>
+  <p class="text-muted">We'll contact you to confirm delivery.</p>
+  @if (Model != null) {
+    <div class="card mx-auto mt-4 shadow-sm text-start" style="max-width:500px"><div class="card-body">
+      <h6>Order #@Model.OrderId</h6>
+      <p class="text-muted small">@Model.OrderDate?.ToString("dd/MM/yyyy HH:mm")</p><hr/>
+      @foreach (var item in Model.OrderItems) {
+        <div class="d-flex justify-content-between"><span>@item.Product?.ProductName × @item.Quantity</span><span>@((item.Price*item.Quantity)?.ToString("N0")) ₫</span></div>
+      }
+      <hr/><div class="d-flex justify-content-between fw-bold"><span>Total</span><span class="text-primary">@Model.TotalAmount?.ToString("N0") ₫</span></div>
+      <div class="alert alert-info mt-3 mb-0">💵 Payment: <strong>Cash on Delivery</strong></div>
+    </div></div>
+  }
+  <div class="mt-4">
+    <a href="/Order/MyOrders" class="btn btn-primary me-2">My Orders</a>
+    <a href="/Product/Index" class="btn btn-outline-secondary">Continue Shopping</a>
+  </div>
+</div>

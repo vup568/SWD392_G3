@@ -1,0 +1,11 @@
+@model SWD392_MVC.Models.User
+@{ ViewData["Title"] = "Customer Detail"; }
+<h4>@Model.FullName</h4><hr/>
+<dl class="row">
+  <dt class="col-sm-3">Email</dt><dd class="col-sm-9">@Model.Email</dd>
+  <dt class="col-sm-3">Phone</dt><dd class="col-sm-9">@Model.Phone</dd>
+  <dt class="col-sm-3">Address</dt><dd class="col-sm-9">@Model.Address</dd>
+  <dt class="col-sm-3">Status</dt><dd class="col-sm-9"><span class="badge @(Model.Status==true?"bg-success":"bg-secondary")">@(Model.Status==true?"Active":"Inactive")</span></dd>
+  <dt class="col-sm-3">Orders</dt><dd class="col-sm-9">@Model.OrderUsers.Count total orders</dd>
+</dl>
+<a href="/Marketing/Customers" class="btn btn-outline-secondary">← Back</a>

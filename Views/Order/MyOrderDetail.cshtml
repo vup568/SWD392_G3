@@ -1,0 +1,96 @@
+@model SWD392_MVC.Models.Order
+@{ ViewData["Title"] = "Order Detail"; }
+
+<div class="d-flex align-items-center gap-3 mb-3">
+    <h4 class="mb-0"><i class="bi bi-receipt me-2"></i>Order #@Model.OrderId</h4>
+    <span class="badge fs-6 @(Model.Status=="Completed"?"bg-success":Model.Status=="Cancelled"?"bg-danger":"bg-warning text-dark")">
+        @Model.Status
+    </span>
+</div>
+<p class="text-muted small">Placed: @Model.OrderDate?.ToString("dd/MM/yyyy HH:mm")</p>
+
+<div class="card mb-4">
+  <div class="card-body p-0">
+    <table class="table mb-0">
+      <thead class="table-light">
+        <tr><th>Product</th><th>Unit Price</th><th>Qty</th><th>Subtotal</th></tr>
+      </thead>
+      <tbody>
+        @foreach (var item in Model.OrderItems) {
+          <tr>
+            <td>@item.Product?.ProductName</td>
+            <td>@item.Price?.ToString("N0") ₫</td>
+            <td>@item.Quantity</td>
+            <td class="fw-semibold">@((item.Price * item.Quantity)?.ToString("N0")) ₫</td>
+          </tr>
+        }
+      </tbody>
+      <tfoot>
+        <tr class="table-light">
+          <td colspan="3" class="text-end fw-bold">Total:</td>
+          <td class="fw-bold text-primary fs-5">@Model.TotalAmount?.ToString("N0") ₫</td>
+        </tr>
+      </tfoot>
+    </table>
+  </div>
+</div>
+
+<div class="alert alert-info d-flex align-items-center gap-2">
+  <i class="bi bi-cash-coin fs-5"></i>
+  <span>Payment method: <strong>Cash on Delivery</strong></span>
+</div>
+
+@if (Model.Status == "Submitted") {
+  <a href="/Order/Cancel/@Model.OrderId" class="btn btn-danger me-2"
+     onclick="return confirm('Cancel this order?')">
+    <i class="bi bi-x-circle me-1"></i>Cancel Order
+  </a>
+}
+
+@if (Model.Status == "Completed") {
+  <hr class="my-4" />
+  @if ((bool)ViewBag.AlreadyReviewed) {
+    <div class="alert alert-success d-flex align-items-center gap-2">
+      <i class="bi bi-check-circle-fill"></i>
+      <span>You have already submitted a review for this order. Thank you!</span>
+    </div>
+  } else {
+    <h5 class="mb-3"><i class="bi bi-star me-2 text-warning"></i>Leave a Review</h5>
+    <p class="text-muted small">Pick any product from your order and share your experience.</p>
+    <form method="post" action="/Order/SubmitReview" class="card p-4">
+      <input type="hidden" name="orderId" value="@Model.OrderId" />
+      <div class="mb-3">
+        <label class="form-label">Product</label>
+        <select name="productId" class="form-select" required>
+          <option value="">-- Select a product --</option>
+          @foreach (var item in Model.OrderItems) {
+            <option value="@item.ProductId">@item.Product?.ProductName</option>
+          }
+        </select>
+      </div>
+      <div class="mb-3">
+        <label class="form-label">Rating</label>
+        <div class="d-flex gap-3">
+          @for (int i = 1; i <= 5; i++) {
+            <div class="form-check form-check-inline">
+              <input class="form-check-input" type="radio" name="rating" value="@i" id="star@(i)" required />
+              <label class="form-check-label" for="star@(i)">@i ★</label>
+            </div>
+          }
+        </div>
+      </div>
+      <div class="mb-3">
+        <label class="form-label">Your Review</label>
+        <textarea name="content" class="form-control" rows="3"
+                  placeholder="Share your experience with this product..." required></textarea>
+      </div>
+      <button type="submit" class="btn btn-primary">
+        <i class="bi bi-send me-1"></i>Submit Review
+      </button>
+    </form>
+  }
+}
+
+<a href="/Order/MyOrders" class="btn btn-outline-secondary mt-3">
+  <i class="bi bi-arrow-left me-1"></i>Back to My Orders
+</a>

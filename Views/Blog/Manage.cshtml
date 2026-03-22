@@ -1,0 +1,23 @@
+@model IList<SWD392_MVC.Models.Post>
+@{ ViewData["Title"] = "Manage Posts"; }
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <h4><i class="bi bi-newspaper"></i> Manage Posts</h4>
+  <a href="/Blog/Create" class="btn btn-success"><i class="bi bi-plus"></i> New Post</a>
+</div>
+<table class="table table-hover">
+  <thead class="table-dark"><tr><th>Title</th><th>Author</th><th>Date</th><th>Status</th><th>Actions</th></tr></thead>
+  <tbody>
+    @foreach (var p in Model) {
+      <tr>
+        <td>@p.Title</td><td>@p.Author?.FullName</td>
+        <td>@p.CreatedAt?.ToString("dd/MM/yyyy")</td>
+        <td><span class="badge @(p.Status==true?"bg-success":"bg-secondary")">@(p.Status==true?"Active":"Hidden")</span></td>
+        <td>
+          <a href="/Blog/Edit/@p.PostId" class="btn btn-sm btn-warning">Edit</a>
+          <a href="/Blog/ToggleStatus/@p.PostId" class="btn btn-sm @(p.Status==true?"btn-secondary":"btn-success")">@(p.Status==true?"Hide":"Show")</a>
+          <a href="/Blog/Delete/@p.PostId" class="btn btn-sm btn-danger" onclick="return confirm('Delete?')">Delete</a>
+        </td>
+      </tr>
+    }
+  </tbody>
+</table>

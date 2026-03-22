@@ -1,0 +1,47 @@
+@model List<(SWD392_MVC.Models.Product product, int quantity)>
+@{ ViewData["Title"] = "Shopping Cart"; var total = Model.Sum(i => i.product.Price * i.quantity); }
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <h4><i class="bi bi-cart3"></i> Shopping Cart</h4>
+  <a href="/Product/Index" class="btn btn-outline-secondary">← Continue Shopping</a>
+</div>
+@if (!Model.Any()) {
+  <div class="text-center py-5"><p style="font-size:4rem">🛒</p><h5>Your cart is empty</h5>
+    <a href="/Product/Index" class="btn btn-primary mt-2">Browse Products</a></div>
+} else {
+  <table class="table align-middle">
+    <thead class="table-light"><tr><th>Product</th><th>Price</th><th>Quantity</th><th>Subtotal</th><th></th></tr></thead>
+    <tbody>
+      @foreach (var (p, qty) in Model) {
+        <tr>
+          <td><div class="d-flex align-items-center gap-2">
+            @if (!string.IsNullOrEmpty(p.ImageUrl)) { <img src="@p.ImageUrl" style="width:50px;height:50px;object-fit:cover;" class="rounded"/> }
+            @p.ProductName</div></td>
+          <td>@p.Price.ToString("N0") ₫</td>
+          <td>
+            <form method="post" action="/Cart/Update" class="d-flex gap-1 align-items-center">
+              <input type="hidden" name="productId" value="@p.ProductId"/>
+              <input type="number" name="quantity" value="@qty" min="1" class="form-control form-control-sm" style="width:70px"/>
+              <button type="submit" class="btn btn-sm btn-outline-secondary">Update</button>
+            </form>
+          </td>
+          <td class="fw-bold">@((p.Price * qty).ToString("N0")) ₫</td>
+          <td><a href="/Cart/Remove/@p.ProductId" class="btn btn-sm btn-outline-danger">Remove</a></td>
+        </tr>
+      }
+    </tbody>
+    <tfoot><tr><td colspan="3" class="text-end fw-bold fs-5">Total:</td>
+      <td colspan="2" class="fw-bold fs-5 text-primary">@total.ToString("N0") ₫</td></tr></tfoot>
+  </table>
+  <div class="text-end mt-3">
+        @{
+            var role = User.FindFirst("UserRole")?.Value;
+        }
+    @if (role == "Customer") { <a href="/Cart/Checkout" class="btn btn-success btn-lg">Checkout →</a> }
+        else if (User.Identity.IsAuthenticated == null)
+        {
+
+            <a href="/Account/Login" class="btn btn-primary btn-lg">Login to Checkout →</a>
+        }
+    else { <div class="alert alert-warning d-inline-block">Only Customer accounts can place orders.</div> }
+  </div>
+}

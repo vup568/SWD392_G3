@@ -1,0 +1,12 @@
+@model SWD392_MVC.Models.Post
+@{ ViewData["Title"] = Model.Title; }
+<div class="row justify-content-center"><div class="col-md-8">
+  <nav aria-label="breadcrumb" class="mb-3">
+    <ol class="breadcrumb"><li class="breadcrumb-item"><a href="/Blog/Index">Blog</a></li>
+      <li class="breadcrumb-item active">@Model.Title</li></ol>
+  </nav>
+  <h2>@Model.Title</h2>
+  <p class="text-muted"><i class="bi bi-person"></i> @Model.Author?.FullName | @Model.CreatedAt?.ToString("dd/MM/yyyy")</p>
+  <hr/><div>@Html.Raw(Model.Content)</div>
+  <hr/><a href="/Blog/Index" class="btn btn-outline-secondary">← Back to Blog</a>
+</div></div>

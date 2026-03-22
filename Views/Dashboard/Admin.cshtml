@@ -1,0 +1,33 @@
+@model SWD392_MVC.Services.AdminDashboardData
+@{ ViewData["Title"] = "Admin Dashboard"; }
+<h4 class="mb-4"><i class="bi bi-speedometer2"></i> Admin Dashboard</h4>
+<div class="row g-3 mb-4">
+  <div class="col-md-3"><div class="card stat-card border-primary p-3">
+    <div class="d-flex justify-content-between"><div><p class="text-muted mb-1">Total Users</p><h3 class="fw-bold">@Model.TotalUsers</h3></div><i class="bi bi-people fs-1 text-primary opacity-50"></i></div>
+  </div></div>
+  <div class="col-md-3"><div class="card stat-card border-success p-3">
+    <div class="d-flex justify-content-between"><div><p class="text-muted mb-1">Active Products</p><h3 class="fw-bold">@Model.TotalProducts</h3></div><i class="bi bi-box fs-1 text-success opacity-50"></i></div>
+  </div></div>
+  <div class="col-md-3"><div class="card stat-card border-warning p-3">
+    <div class="d-flex justify-content-between"><div><p class="text-muted mb-1">Total Orders</p><h3 class="fw-bold">@Model.TotalOrders</h3></div><i class="bi bi-cart-check fs-1 text-warning opacity-50"></i></div>
+  </div></div>
+  <div class="col-md-3"><div class="card stat-card border-info p-3">
+    <div class="d-flex justify-content-between"><div><p class="text-muted mb-1">Revenue</p><h3 class="fw-bold">@Model.TotalRevenue.ToString("N0")</h3></div><i class="bi bi-cash-coin fs-1 text-info opacity-50"></i></div>
+  </div></div>
+</div>
+<div class="row g-3">
+  <div class="col-md-6"><div class="card p-3">
+    <h6>Orders by Status</h6><hr/>
+    @foreach (var kvp in Model.OrdersByStatus) {
+      <div class="d-flex justify-content-between mb-1"><span>@kvp.Key</span><span class="badge bg-primary">@kvp.Value</span></div>
+    }
+  </div></div>
+  <div class="col-md-6"><div class="card p-3">
+    <h6>Quick Links</h6><hr/>
+    <div class="d-grid gap-2">
+      <a href="/Dashboard/Users" class="btn btn-outline-primary btn-sm"><i class="bi bi-people"></i> User Management</a>
+      <a href="/Config/Categories" class="btn btn-outline-secondary btn-sm"><i class="bi bi-tags"></i> Product Categories</a>
+      <a href="/Config/Settings" class="btn btn-outline-secondary btn-sm"><i class="bi bi-gear"></i> System Settings</a>
+    </div>
+  </div></div>
+</div>

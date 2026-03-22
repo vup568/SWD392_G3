@@ -1,0 +1,32 @@
+@model SWD392_MVC.Models.Order
+@{ ViewData["Title"] = "Order Detail"; }
+<h4><i class="bi bi-receipt"></i> Order #@Model.OrderId</h4>
+<div class="row mb-3">
+  <div class="col-md-6">
+    <p><strong>Customer:</strong> @Model.User?.FullName</p>
+    <p><strong>Date:</strong> @Model.OrderDate?.ToString("dd/MM/yyyy HH:mm")</p>
+    <p><strong>Status:</strong> <span class="badge @(Model.Status=="Completed"?"bg-success":Model.Status=="Cancelled"?"bg-danger":"bg-warning text-dark")">@Model.Status</span></p>
+    <p><strong>Handled by:</strong> @(Model.Sale?.FullName ?? "Unassigned")</p>
+  </div>
+</div>
+<table class="table"><thead class="table-light"><tr><th>Product</th><th>Price</th><th>Qty</th><th>Subtotal</th></tr></thead>
+  <tbody>
+    @foreach (var item in Model.OrderItems) {
+      <tr><td>@item.Product?.ProductName</td><td>@item.Price?.ToString("N0") ₫</td><td>@item.Quantity</td><td class="fw-bold">@((item.Price*item.Quantity)?.ToString("N0")) ₫</td></tr>
+    }
+  </tbody>
+  <tfoot><tr><td colspan="3" class="text-end fw-bold">Total:</td><td class="fw-bold text-primary fs-5">@Model.TotalAmount?.ToString("N0") ₫</td></tr></tfoot>
+</table>
+@if (Model.Status != "Cancelled" && Model.Status != "Completed") {
+  <form method="post" action="/Order/UpdateStatus" class="d-flex gap-2 align-items-center mt-3">
+    <input type="hidden" name="orderId" value="@Model.OrderId"/>
+    <select name="status" class="form-select" style="max-width:200px">
+      <option value="Submitted">Submitted</option>
+      <option value="Processing">Processing</option>
+      <option value="Completed">Completed</option>
+      <option value="Cancelled">Cancelled</option>
+    </select>
+    <button type="submit" class="btn btn-primary">Update Status</button>
+  </form>
+}
+<a href="/Order/Manage" class="btn btn-outline-secondary mt-2">← Back</a>

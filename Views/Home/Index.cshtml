@@ -1,0 +1,172 @@
+@using SWD392_MVC.Models
+@{
+    ViewData["Title"] = "Home";
+    var categories = (IList<ProductCategory>)ViewBag.Categories;
+    var products   = (IList<Product>)ViewBag.FeaturedProducts;
+    var posts      = (IList<Post>)ViewBag.LatestPosts;
+    var sliders    = (IList<Slider>)ViewBag.Sliders;
+    var reviews    = (IList<Feedback>)ViewBag.TopReviews;
+    string? role = null;
+    var jwtCookie = Context.Request.Cookies["jwt"];
+    if (!string.IsNullOrEmpty(jwtCookie)) {
+        try {
+            var h = new System.IdentityModel.Tokens.Jwt.JwtSecurityTokenHandler();
+            role = h.ReadJwtToken(jwtCookie).Claims.FirstOrDefault(c => c.Type == "UserRole")?.Value;
+        } catch { }
+    }
+    bool canShop = role == null || role == "Customer";
+}
+
+@* Slider Carousel *@
+@if (sliders != null && sliders.Any()) {
+<div id="heroCarousel" class="carousel slide mb-4 rounded-4 overflow-hidden shadow"
+     data-bs-ride="carousel" data-bs-interval="4000">
+    <div class="carousel-indicators">
+        @for (int i = 0; i < sliders.Count; i++) {
+            <button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="@i"
+                    class="@(i==0?"active":"")" aria-label="Slide @(i+1)"></button>
+        }
+    </div>
+    <div class="carousel-inner" style="max-height:420px;">
+        @for (int i = 0; i < sliders.Count; i++) {
+            var s = sliders[i];
+            <div class="carousel-item @(i==0?"active":"")">
+                <a href="@(s.Link ?? "#")">
+                    <img src="@s.ImageUrl" class="d-block w-100"
+                         style="object-fit:cover;max-height:420px;" alt="@s.Title"
+                         onerror="this.parentElement.parentElement.style.background='linear-gradient(135deg,#1a56db,#6d28d9)';this.style.display='none'" />
+                </a>
+                <div class="carousel-caption d-none d-md-block"
+                     style="background:rgba(0,0,0,.4);border-radius:10px;padding:.6rem 1.2rem;bottom:1.5rem;">
+                    <h5 class="fw-bold mb-0">@s.Title</h5>
+                </div>
+            </div>
+        }
+    </div>
+    @if (sliders.Count > 1) {
+        <button class="carousel-control-prev" type="button" data-bs-target="#heroCarousel" data-bs-slide="prev">
+            <span class="carousel-control-prev-icon"></span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#heroCarousel" data-bs-slide="next">
+            <span class="carousel-control-next-icon"></span>
+        </button>
+    }
+</div>
+} else {
+<div class="hero-banner mb-4">
+    <h1 class="mb-3"><i class="bi bi-shop-window me-2"></i>OnlineShop</h1>
+    <p class="mb-4">San pham chat luong, giao hang tan noi.</p>
+    <a class="btn btn-light btn-lg fw-bold px-5 rounded-pill shadow" href="/Product/Index" style="color:#1a56db">
+        <i class="bi bi-grid me-2"></i>Mua sam ngay
+    </a>
+</div>
+}
+
+@* Category Pills *@
+@if (categories.Any()) {
+<div class="d-flex flex-wrap gap-2 mb-4">
+    <a href="/Product/Index" class="cat-pill btn active">Tat ca</a>
+    @foreach (var cat in categories) {
+        <a href="/Product/Index?categoryId=@cat.CategoryId" class="cat-pill btn">@cat.CategoryName</a>
+    }
+</div>
+}
+
+@* Featured Products *@
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h5 class="section-title mb-0">San pham noi bat</h5>
+    <a href="/Product/Index" class="btn btn-outline-primary btn-sm rounded-pill px-3">Xem tat ca <i class="bi bi-arrow-right"></i></a>
+</div>
+@if (!products.Any()) {
+    <div class="empty-state"><span class="empty-icon">📦</span><p>Chua co san pham.</p></div>
+} else {
+<div class="row row-cols-2 row-cols-md-4 g-3 mb-5">
+    @foreach (var p in products) {
+    <div class="col">
+        <div class="card h-100 product-card">
+            @if (!string.IsNullOrEmpty(p.ImageUrl)) {
+                <img src="@p.ImageUrl" class="card-img-top"
+                     style="height:180px;object-fit:cover;border-radius:14px 14px 0 0;" alt="@p.ProductName"
+                     onerror="this.style.display='none';this.nextElementSibling.style.display='flex'" />
+                <div class="img-placeholder" style="display:none"><i class="bi bi-image text-secondary" style="font-size:3rem;"></i></div>
+            } else {
+                <div class="img-placeholder"><i class="bi bi-box-seam text-secondary" style="font-size:3rem;"></i></div>
+            }
+            <div class="card-body d-flex flex-column p-3">
+                <small class="text-muted mb-1">@p.Category?.CategoryName</small>
+                <h6 class="fw-bold mb-1 flex-grow-1" style="font-size:.93rem;min-height:2.4rem;">@p.ProductName</h6>
+                <div class="price mb-1">@p.Price.ToString("N0") &#8363;</div>
+                <small class="mb-2" style="color:#16a34a;font-weight:600;font-size:.78rem;">
+                    <i class="bi bi-check-circle me-1"></i>Con @p.Quantity san pham
+                </small>
+                <div class="d-flex gap-2 mt-auto">
+                    <a href="/Product/Detail/@p.ProductId" class="btn btn-outline-secondary btn-sm flex-fill">Chi tiet</a>
+                    @if (canShop) {
+                        <a href="/Cart/Add/@p.ProductId" class="btn btn-primary btn-sm flex-fill">
+                            <i class="bi bi-cart-plus"></i>
+                        </a>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+    }
+</div>
+}
+
+@* Customer Reviews *@
+@if (reviews != null && reviews.Any()) {
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h5 class="section-title mb-0">Danh gia tu khach hang</h5>
+</div>
+<div class="row row-cols-1 row-cols-md-3 g-3 mb-5">
+    @foreach (var r in reviews) {
+    <div class="col">
+        <div class="card h-100 p-3">
+            <div class="d-flex align-items-center gap-2 mb-2">
+                <div class="rounded-circle bg-primary d-flex align-items-center justify-content-center text-white fw-bold"
+                     style="width:38px;height:38px;flex-shrink:0;font-size:.95rem;">
+                    @(r.User?.FullName?.Length > 0 ? r.User.FullName[0].ToString().ToUpper() : "?")
+                </div>
+                <div>
+                    <div class="fw-semibold" style="font-size:.9rem;">@r.User?.FullName</div>
+                    <div>
+                        @for (int i = 0; i < (r.Rating ?? 0); i++) { <span class="text-warning" style="font-size:.85rem;">&#9733;</span> }
+                        @for (int i = (r.Rating ?? 0); i < 5; i++) { <span class="text-muted" style="font-size:.85rem;">&#9733;</span> }
+                    </div>
+                </div>
+                <small class="text-muted ms-auto" style="font-size:.75rem;">@r.CreatedAt?.ToString("dd/MM/yyyy")</small>
+            </div>
+            <p class="text-muted mb-1" style="font-size:.82rem;"><i class="bi bi-bag me-1"></i>@r.Product?.ProductName</p>
+            <p class="mb-0" style="font-size:.9rem;">@r.Content</p>
+        </div>
+    </div>
+    }
+</div>
+}
+
+@* Latest Blog Posts *@
+@if (posts.Any()) {
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h5 class="section-title mb-0">Bai viet moi nhat</h5>
+    <a href="/Blog/Index" class="btn btn-outline-primary btn-sm rounded-pill px-3">Xem tat ca <i class="bi bi-arrow-right"></i></a>
+</div>
+<div class="row row-cols-1 row-cols-md-3 g-3 mb-4">
+    @foreach (var post in posts) {
+    <div class="col">
+        <div class="card h-100 p-3">
+            <div class="d-flex align-items-center gap-2 mb-2">
+                <div class="rounded-circle bg-primary d-flex align-items-center justify-content-center"
+                     style="width:36px;height:36px;flex-shrink:0">
+                    <i class="bi bi-file-earmark-text text-white"></i>
+                </div>
+                <small class="text-muted">@post.CreatedAt?.ToString("dd/MM/yyyy")</small>
+            </div>
+            <h6 class="fw-bold mb-1" style="font-size:.93rem;">@post.Title</h6>
+            <p class="text-muted small mb-3">Boi @post.Author?.FullName</p>
+            <a href="/Blog/Detail/@post.PostId" class="btn btn-outline-primary btn-sm mt-auto rounded-pill">Doc them</a>
+        </div>
+    </div>
+    }
+</div>
+}
